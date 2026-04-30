@@ -1,0 +1,9 @@
+.DS_Store
+
+# Crawled site assets that are too large/noisy for local version history
+GET-www.jchc.cn/storage/
+
+# Generated crawl/debug logs
+log.txt
+log.*.txt
+log.*.json
