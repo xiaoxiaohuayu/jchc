@@ -7032,13 +7032,13 @@ const li = (g) => (Er("data-v-3316e0ac"), (g = g()), Tr(), g),
         C = [
           {
             id: 1,
-            title: "e行高速App",
+            title: "新e畅App",
             qrCode:
               "https://www.jchc.cn/storage/sjk/b9065284-90ce-46fd-9e0f-a6e63c6131dc.png",
           },
           {
             id: 2,
-            title: '"江苏高速"公众号',
+            title: '"新疆交投"公众号',
             qrCode:
               "https://www.jchc.cn/storage/sjk/e1603caf-ef30-41d6-9a36-8ad7ec6b2709.jpg",
           },
@@ -7048,12 +7048,12 @@ const li = (g) => (Er("data-v-3316e0ac"), (g = g()), Tr(), g),
             qrCode:
               "https://www.jchc.cn/storage/sjk/15298361-c7d0-4a2e-bf9c-e80341b422ee.jpg",
           },
-          {
-            id: 4,
-            title: "先锋荟App",
-            qrCode:
-              "https://www.jchc.cn/storage/sjk/f0d2b763-65c4-4373-a6eb-07f27d930af9.png",
-          },
+          // {
+          //   id: 4,
+          //   title: "先锋荟App",
+          //   qrCode:
+          //     "https://www.jchc.cn/storage/sjk/f0d2b763-65c4-4373-a6eb-07f27d930af9.png",
+          // },
         ],
         b = Bt();
       La(() => {
@@ -7711,7 +7711,7 @@ function a_() {
       var C, b;
       return (b = (C = a.value) == null ? void 0 : C.menuInfoList) == null
         ? void 0
-        : b.find((F) => F.name === "公司要闻");
+        : b.find((F) => ["公司要闻", "集团要闻"].includes(F.name));
     });
   function I(C) {
     var b, F;
@@ -7768,7 +7768,7 @@ const u_ = { class: "ctn h-screen flex flex-col" },
         b = oi(),
         F = _t(() => b.firstMenuByName("新闻中心")),
         Y = [
-          "公司要闻",
+          "集团要闻",
           "国资网讯",
           "媒体聚焦",
         ],
@@ -7778,6 +7778,11 @@ const u_ = { class: "ctn h-screen flex flex-col" },
             ? void 0
             : K.filter((et) => Y.includes(et.name));
         }),
+        J = {
+          集团要闻: "公司要闻",
+          国资网讯: "国资网讯",
+          媒体聚焦: "媒体聚焦",
+        },
         B = wv(new Array(3).fill([])),
         { jumpTopNews: W } = a_();
       (fn(
@@ -7852,8 +7857,8 @@ const u_ = { class: "ctn h-screen flex flex-col" },
                                     (At =
                                       (ut = S(B)[0]) == null
                                         ? void 0
-                                        : ut[0]) == null
-                                      ? void 0
+                                        : ut[0]) == null || !At.photoPath
+                                      ? "/assets/news-bg.dc4d7627.webp"
                                       : At.photoPath,
                                   onClick:
                                     K[0] ||
@@ -7917,8 +7922,8 @@ const u_ = { class: "ctn h-screen flex flex-col" },
                                       (Ce =
                                         (Ge = S(B)[0]) == null
                                           ? void 0
-                                          : Ge[0]) == null
-                                        ? void 0
+                                          : Ge[0]) == null || !Ce.photoPath
+                                        ? "/assets/news-bg.dc4d7627.webp"
                                         : Ce.photoPath,
                                   },
                                   [
@@ -7946,7 +7951,7 @@ const u_ = { class: "ctn h-screen flex flex-col" },
                             Qo,
                             {
                               "article-list": S(B)[0],
-                              title: S(U)[0].name,
+                              title: S(J)[S(U)[0].name] || S(U)[0].name,
                               class: ht([
                                 "animate-delay-300",
                                 { "both-1000 animate-fade-in-right": S(I) },
@@ -7977,7 +7982,7 @@ const u_ = { class: "ctn h-screen flex flex-col" },
                                   {
                                     key: Jt.id,
                                     "article-list": S(B).slice(1)[Ve],
-                                    title: Jt.name,
+                                    title: S(J)[Jt.name] || Jt.name,
                                     style: qe({
                                       animationDelay: `${150 * Ve}ms`,
                                     }),
@@ -8122,29 +8127,29 @@ const w_ = (g) => (Er("data-v-d83afada"), (g = g()), Tr(), g),
           {
             showIcon:
               "https://www.jchc.cn/storage/sjk/b09d85a5-4970-4e4a-bd60-73561700ecae.png",
-            title: "全口径总资产",
+            title: "总资产",
             count: 2373.31,
             unit: "亿",
           },
           {
             showIcon:
               "https://www.jchc.cn/storage/sjk/28e35c6e-e280-4718-a3e4-800ea4ac6dca.png",
-            title: "净资产",
-            count: 1023,
-            unit: "亿",
+            title: "运营全区高速公路",
+            count: 8125,
+            unit: "公里",
           },
           {
             showIcon:
               "https://www.jchc.cn/storage/sjk/79c3df0e-d85a-48dd-8613-e0edf5970e15.png",
-            title: "下辖企事业单位",
-            count: 35,
+            title: "下属企业",
+            count: 142,
             unit: "",
           },
           {
             showIcon:
               "https://www.jchc.cn/storage/sjk/6cb187ef-184f-44e3-bf67-b33073c8914d.png",
-            title: "控股上市企业",
-            count: 1,
+            title: "收费站",
+            count: 229,
             unit: "",
           },
           {
@@ -8314,19 +8319,19 @@ const L_ = { class: "h-screen grid grid-cols-3 bg-black" },
           return (W = b.value) == null ? void 0 : W.menuInfoList;
         }),
         Y = {
-          交通基础设施: {
+          投资建设: {
             bgImg:
               "https://www.jchc.cn/storage/sjk/6367dee9-4af6-4c3f-8aab-bc4def1f5184.jpg",
             showIcon:
               "https://www.jchc.cn/storage/sjk/3207f02a-6b36-4ac5-9e02-7d9d5d74007a.png",
           },
-          产业金融: {
+          运营管理: {
             bgImg:
               "https://www.jchc.cn/storage/sjk/8cc7370d-44c9-40c4-b2de-b817e577bc6a.jpg",
             showIcon:
               "https://www.jchc.cn/storage/sjk/5db8b3b4-c1e9-4066-88c6-0e3b24d04bbf.png",
           },
-          交通产业: {
+          产业科技: {
             bgImg:
               "https://www.jchc.cn/storage/sjk/d8b21765-daa2-4785-b297-4cac7d07b3bf.jpg",
             showIcon:

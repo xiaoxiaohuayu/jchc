@@ -303,6 +303,13 @@ function resolveDirectFile(root, pathname) {
 function sendResolvedResponse(index, requestUrl, resolved, res) {
   const filePath = resolved.filePath;
   const contentType = getContentType(filePath);
+  const responseHeaders = {
+    "cache-control": "no-store",
+    "content-type": contentType,
+    "x-capture-file": path.relative(index.captureDir, filePath),
+    "x-capture-origin": index.primaryOrigin,
+    "x-capture-route": requestUrl.pathname + requestUrl.search,
+  };
 
   if (isTextLike(contentType)) {
     let body = fs.readFileSync(filePath, "utf8");
@@ -315,9 +322,8 @@ function sendResolvedResponse(index, requestUrl, resolved, res) {
 
     const bodyBuffer = Buffer.from(body, "utf8");
     res.writeHead(200, {
-      "cache-control": "no-store",
+      ...responseHeaders,
       "content-length": bodyBuffer.length,
-      "content-type": contentType,
     });
     res.end(bodyBuffer);
     return;
@@ -325,9 +331,8 @@ function sendResolvedResponse(index, requestUrl, resolved, res) {
 
   const stat = fs.statSync(filePath);
   res.writeHead(200, {
-    "cache-control": "no-store",
+    ...responseHeaders,
     "content-length": stat.size,
-    "content-type": contentType,
   });
   fs.createReadStream(filePath).pipe(res);
 }
