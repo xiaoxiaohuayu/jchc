@@ -1,0 +1,23 @@
+@font-face {
+    font-family: "STSongti-SC";
+    src: url("STSongti-SC.ttf") format("truetype");
+}
+
+@font-face {
+    font-family: "PingFangSC-Regular";
+    src: url("PingFangSC-Regular.otf") format("truetype");
+}
+
+@font-face {
+    font-family: "PingFangSC-Medium";
+    src: url("PingFangSC-Medium.otf") format("truetype");
+}
+
+@font-face {
+    font-family: "STSongti-SC-Black";
+    src: url("STSongti-SC-Black.ttf") format("truetype");
+}
+@font-face {
+    font-family: "simhei";
+    src: url("simhei.ttf") format("truetype");
+}

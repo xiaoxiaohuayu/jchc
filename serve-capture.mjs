@@ -33,6 +33,7 @@ const MIME_TYPES = new Map([
 ]);
 
 const index = loadCaptureIndex(captureDir, preferredOrigin);
+const staticMounts = loadStaticMounts(captureDir);
 
 if (inspectOnly) {
   printSummary(index);
@@ -245,6 +246,18 @@ function isIgnorableQueryKey(key) {
 }
 
 function resolveRequest(index, requestUrl, acceptHeader) {
+  const mounted = resolveMountedFile(staticMounts, requestUrl.pathname);
+  if (mounted) {
+    return {
+      filePath: mounted,
+      method: "GET",
+      relativeFile: path.relative(index.captureDir, mounted),
+      size: fs.statSync(mounted).size,
+      status: 200,
+      url: requestUrl,
+    };
+  }
+
   const exactMatch = index.exact.get(makeExactKey(requestUrl));
   if (exactMatch) return exactMatch;
 
@@ -266,6 +279,58 @@ function resolveRequest(index, requestUrl, acceptHeader) {
   const wantsHtml = acceptHeader.includes("text/html") || acceptHeader.includes("*/*");
   if (wantsHtml && !path.extname(requestUrl.pathname) && index.defaultHtmlEntry) {
     return index.defaultHtmlEntry;
+  }
+
+  return null;
+}
+
+function loadStaticMounts(rootDir) {
+  const mounts = [];
+  const talentHostRoot = path.resolve(rootDir, "talent/GET-www.jchc.cn");
+
+  const sharedMounts = [
+    ["/cos-file", path.join(talentHostRoot, "cos-file")],
+    ["/storage", path.join(talentHostRoot, "storage")],
+  ];
+
+  for (const [routePrefix, mountRoot] of sharedMounts) {
+    if (fs.existsSync(mountRoot) && fs.statSync(mountRoot).isDirectory()) {
+      mounts.push({
+        routePrefix,
+        rootDir: mountRoot,
+      });
+    }
+  }
+
+  const talentBackendRoot = path.resolve(rootDir, "talent/GET-www.jchc.cn/talent_backend");
+  if (fs.existsSync(talentBackendRoot) && fs.statSync(talentBackendRoot).isDirectory()) {
+    mounts.push({
+      routePrefix: "/talent_backend",
+      rootDir: talentBackendRoot,
+    });
+  }
+
+  const talentRoot = path.resolve(rootDir, "talent/GET-www.jchc.cn/talent");
+  if (fs.existsSync(talentRoot) && fs.statSync(talentRoot).isDirectory()) {
+    mounts.push({
+      routePrefix: "/talent",
+      rootDir: talentRoot,
+    });
+  }
+  return mounts;
+}
+
+function resolveMountedFile(mounts, pathname) {
+  for (const mount of mounts) {
+    if (pathname !== mount.routePrefix && !pathname.startsWith(`${mount.routePrefix}/`)) {
+      continue;
+    }
+
+    const nestedPath = pathname.slice(mount.routePrefix.length) || "/";
+    const direct = resolveDirectFile(mount.rootDir, nestedPath);
+    if (direct) {
+      return direct;
+    }
   }
 
   return null;
@@ -303,12 +368,13 @@ function resolveDirectFile(root, pathname) {
 function sendResolvedResponse(index, requestUrl, resolved, res) {
   const filePath = resolved.filePath;
   const contentType = getContentType(filePath);
+  const relativeFile = path.relative(index.captureDir, filePath).split(path.sep).join("/");
   const responseHeaders = {
     "cache-control": "no-store",
     "content-type": contentType,
-    "x-capture-file": path.relative(index.captureDir, filePath),
-    "x-capture-origin": index.primaryOrigin,
-    "x-capture-route": requestUrl.pathname + requestUrl.search,
+    "x-capture-file": toHeaderValue(relativeFile),
+    "x-capture-origin": toHeaderValue(index.primaryOrigin),
+    "x-capture-route": toHeaderValue(requestUrl.pathname + requestUrl.search),
   };
 
   if (isTextLike(contentType)) {
@@ -390,6 +456,10 @@ function safeUrl(value) {
   } catch {
     return null;
   }
+}
+
+function toHeaderValue(value) {
+  return encodeURI(String(value)).replace(/[\r\n]/g, "");
 }
 
 function dedupe(values) {
